@@ -1,0 +1,22 @@
+{
+  "name": "vue-tweet-embed",
+  "version": "1.0.0",
+  "description": "component that you supply tweet id and you'll get a tweet embed back, nothing more. Inspired by https://github.com/capaj/react-tweet-embed",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "vue.js",
+    "tweet",
+    "twitter",
+    "embed"
+  ],
+  "author": "Anton Kozlov <tonickkozlov@me.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.18.2",
+    "eslint": "^3.17.1"
+  }
+}
