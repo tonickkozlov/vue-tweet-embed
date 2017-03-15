@@ -4,7 +4,11 @@
   "description": "component that you supply tweet id and you'll get a tweet embed back, nothing more. Inspired by https://github.com/capaj/react-tweet-embed",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "BABEL_ENV=test ava --verbose --no-power-assert",
+    "pretest": "eslint index.js",
+    "build": "babel index.js --out-dir dist",
+    "clean": "rimraf dist",
+    "prepublish": "npm test && npm run clean && npm run build"
   },
   "keywords": [
     "vue",
@@ -15,8 +19,29 @@
   ],
   "author": "Anton Kozlov <tonickkozlov@me.com>",
   "license": "MIT",
+  "peerDependencies": {
+    "vue": "^2.2.0"
+  },
   "devDependencies": {
     "ava": "^0.18.2",
-    "eslint": "^3.17.1"
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
+    "decache": "^4.1.0",
+    "eslint": "^3.17.1",
+    "eslint-config-standard": "^7.0.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
+    "jsdom": "^9.12.0",
+    "simple-spy": "^2.1.0",
+    "vue": "^2.2.0"
+  },
+  "ava": {
+    "files": [
+      "*.spec.js"
+    ],
+    "babel": "inherit",
+    "require": [
+      "babel-register"
+    ]
   }
 }
