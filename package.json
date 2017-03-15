@@ -1,6 +1,6 @@
 {
   "name": "vue-tweet-embed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "component that you supply tweet id and you'll get a tweet embed back, nothing more. Inspired by https://github.com/capaj/react-tweet-embed",
   "main": "dist/index.js",
   "scripts": {
@@ -11,11 +11,11 @@
     "prepublish": "npm test && npm run clean && npm run build"
   },
   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/tonickkozlov/vue-tweet-embed.git"
+    "type": "git",
+    "url": "git+https://github.com/tonickkozlov/vue-tweet-embed.git"
   },
   "bugs": {
-      "url": "https://github.com/tonickkozlov/vue-tweet-embed/issues"
+    "url": "https://github.com/tonickkozlov/vue-tweet-embed/issues"
   },
   "homepage": "https://github.com/tonickkozlov/vue-tweet-embed#readme",
   "keywords": [
