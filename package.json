@@ -1,7 +1,7 @@
 {
   "name": "vue-tweet-embed",
   "version": "1.0.1",
-  "description": "component that you supply tweet id and you'll get a tweet embed back, nothing more. Inspired by https://github.com/capaj/react-tweet-embed",
+  "description": "Embed tweets in your vue.js app",
   "main": "dist/index.js",
   "scripts": {
     "test": "BABEL_ENV=test ava --verbose --no-power-assert",

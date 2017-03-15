@@ -1,4 +1,5 @@
 # vue-tweet-embed
+inspired by https://github.com/capaj/react-tweet-embed
 
 ## Install
 ```
