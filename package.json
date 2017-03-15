@@ -10,6 +10,14 @@
     "clean": "rimraf dist",
     "prepublish": "npm test && npm run clean && npm run build"
   },
+  "repository": {
+      "type": "git",
+      "url": "git+https://github.com/tonickkozlov/vue-tweet-embed.git"
+  },
+  "bugs": {
+      "url": "https://github.com/tonickkozlov/vue-tweet-embed/issues"
+  },
+  "homepage": "https://github.com/tonickkozlov/vue-tweet-embed#readme",
   "keywords": [
     "vue",
     "vue.js",
