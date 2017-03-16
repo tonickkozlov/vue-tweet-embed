@@ -22,10 +22,20 @@ put it there if `twttr` is not found on window.
 
 ## Using Options
 
-```
+```javascript
 <Tweet :id="'783943172057694208'" :options="{ cards: 'hidden' }"/>
 <Tweet :id="'771763270273294336'" :options="{ theme: 'dark' }"/>
 ```
 
 Embedded-Tweet Options Reference:
 https://dev.twitter.com/web/embedded-tweets/parameters
+
+
+## Showing a placeholder while the tweet is being loaded
+
+To show some content to the user while the tweet is being loaded, just put it inside the Tweet
+component. Placeholder content will be removed automatically once the tweet has finished loading.
+
+```javascript
+<Tweet :id="'783943172057694208'"/><div class="spinner"></div></Tweet>
+```

@@ -3,29 +3,30 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var callbacks = [];
-
-function addScript(src, cb) {
-    if (callbacks.length === 0) {
-        callbacks.push(cb);
+var addScriptPromise = null;
+function addScript(src) {
+    if (!addScriptPromise) {
         var s = document.createElement('script');
         s.setAttribute('src', src);
-        s.onload = function () {
-            return callbacks.forEach(function (cb) {
-                return cb();
-            });
-        };
         document.body.appendChild(s);
-    } else {
-        callbacks.push(cb);
+        addScriptPromise = new Promise(function (resolve, reject) {
+            s.onload = resolve;
+        });
     }
+    return addScriptPromise;
 }
 
 function renderTweet(id, $el, options) {
-    window.twttr.widgets.createTweetEmbed(id, $el, options);
+    return window.twttr.widgets.createTweetEmbed(id, $el, options);
 }
 
 exports.default = {
+    data: function data() {
+        return {
+            isTweetLoaded: false
+        };
+    },
+
     props: {
         id: {
             type: String,
@@ -34,13 +35,15 @@ exports.default = {
         options: Object
     },
     mounted: function mounted() {
-        if (!window.twttr) {
-            addScript('//platform.twitter.com/widgets.js', renderTweet.bind(null, this.id, this.$el, this.options));
-        } else {
-            renderTweet(this.id, this.$el, this.options);
-        }
+        var _this = this;
+
+        (!window.twttr ? addScript('//platform.twitter.com/widgets.js').then(function () {
+            return renderTweet(_this.id, _this.$el, _this.options);
+        }) : renderTweet(this.id, this.$el, this.options)).then(function () {
+            _this.isTweetLoaded = true;
+        });
     },
     render: function render(h) {
-        return h('div', {}, this.$slots.default);
+        return h('div', this.isTweetLoaded ? undefined : this.$slots.default);
     }
 };

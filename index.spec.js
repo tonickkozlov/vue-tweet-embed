@@ -39,7 +39,7 @@ test.afterEach(() => {
     decache('./index.js')
 })
 
-test.serial('Should inject twitter embed script if none is given', t => {
+test('Should inject twitter embed script if none is given', t => {
     const { Tweet, Vue, document } = t.context
     const Ctor = Vue.extend(Tweet)
     new Ctor().$mount()
@@ -48,7 +48,7 @@ test.serial('Should inject twitter embed script if none is given', t => {
     t.true($script !== null)
 })
 
-test.serial('Should not inject more than one script par page', t => {
+test('Should not inject more than one script par page', t => {
     const { Tweet, Vue, document } = t.context
 
     const TweetPage = {
@@ -62,7 +62,7 @@ test.serial('Should not inject more than one script par page', t => {
     t.is($scripts.length, 1)
 })
 
-test.serial('Should not inject anything if a twttr object is set on a window', t => {
+test('Should not inject anything if a twttr object is set on a window', t => {
     const { Tweet, Vue, document, window } = t.context
     window.twttr = { foo: 'bar' }
     const Ctor = Vue.extend(Tweet)
@@ -72,7 +72,7 @@ test.serial('Should not inject anything if a twttr object is set on a window', t
     t.true($script === null)
 })
 
-test.serial('Should call twitter embed library with own id, element', t => {
+test('Should call twitter embed library with own id, element', t => {
     const { Tweet, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
@@ -94,7 +94,7 @@ test.serial('Should call twitter embed library with own id, element', t => {
     t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
 })
 
-test.serial('Should call twitter embed library with passed options', t => {
+test('Should call twitter embed library with passed options', t => {
     const { Tweet, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
@@ -116,4 +116,30 @@ test.serial('Should call twitter embed library with passed options', t => {
     t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '123')
     t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
     t.deepEqual(mockTwttr.widgets.createTweetEmbed.args[0][2], { foo: 'bar' })
+})
+
+test.cb('Should show children while tweet is not loaded', t => {
+
+    const { Tweet, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTweetEmbed: () => {
+                // emulate tweet being loaded
+                return Promise.resolve()
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Tweet id="123"><div id="foo">hi</div></Tweet>',
+        components: { Tweet }
+    })
+    const vm = new Ctor().$mount()
+
+    t.truthy(vm.$el.querySelector('#foo'))
+    setTimeout(() => {
+        t.falsy(vm.$el.querySelector('#foo'))
+        t.end()
+    }, 0)
 })

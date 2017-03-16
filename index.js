@@ -1,22 +1,26 @@
-const callbacks = []
-
-function addScript (src, cb) {
-    if (callbacks.length === 0) {
-        callbacks.push(cb)
-        var s = document.createElement('script')
+let addScriptPromise = null
+function addScript (src) {
+    if (!addScriptPromise) {
+        const s = document.createElement('script')
         s.setAttribute('src', src)
-        s.onload = () => callbacks.forEach((cb) => cb())
         document.body.appendChild(s)
-    } else {
-        callbacks.push(cb)
+        addScriptPromise = new Promise((resolve, reject) => {
+            s.onload = resolve
+        })
     }
+    return addScriptPromise
 }
 
 function renderTweet (id, $el, options) {
-    window.twttr.widgets.createTweetEmbed(id, $el, options)
+    return window.twttr.widgets.createTweetEmbed(id, $el, options)
 }
 
 export default {
+    data () {
+        return {
+            isTweetLoaded: false
+        }
+    },
     props: {
         id: {
             type: String,
@@ -25,13 +29,16 @@ export default {
         options: Object
     },
     mounted () {
-        if (!window.twttr) {
-            addScript('//platform.twitter.com/widgets.js', renderTweet.bind(null, this.id, this.$el, this.options))
-        } else {
-            renderTweet(this.id, this.$el, this.options)
-        }
+        (
+            !window.twttr ? addScript('//platform.twitter.com/widgets.js')
+            .then(() => renderTweet(this.id, this.$el, this.options))
+            : renderTweet(this.id, this.$el, this.options)
+        )
+        .then(() => {
+            this.isTweetLoaded = true
+        })
     },
     render (h) {
-        return h('div', {}, this.$slots.default)
+        return h('div', this.isTweetLoaded ? undefined : this.$slots.default)
     }
 }
