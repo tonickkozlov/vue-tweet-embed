@@ -1,4 +1,6 @@
 # vue-tweet-embed
+
+Embed tweets in your vue.js app
 inspired by https://github.com/capaj/react-tweet-embed
 
 ## Install
