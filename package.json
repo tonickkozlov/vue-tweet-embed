@@ -4,7 +4,7 @@
   "description": "Embed tweets in your vue.js app",
   "main": "dist/index.js",
   "scripts": {
-    "test": "BABEL_ENV=test ava --serial --verbose --no-power-assert",
+    "test": "ava --serial --verbose --no-power-assert",
     "pretest": "eslint index.js",
     "build": "babel index.js --out-dir dist",
     "clean": "rimraf dist",
