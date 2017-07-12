@@ -41,3 +41,14 @@ component. Placeholder content will be removed automatically once the tweet has 
 ```javascript
 <Tweet :id="'783943172057694208'"/><div class="spinner"></div></Tweet>
 ```
+
+
+## Show some css effect to deleted tweet message - "We could not access this Tweet."
+
+Define "msgClass" css class with your css in your page.
+
+```
+.msgClass {
+	// styles goes here
+}
+```
