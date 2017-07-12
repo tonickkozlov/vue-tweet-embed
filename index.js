@@ -45,7 +45,7 @@ export default {
         })
     },
     render (h) {
-        var msg = h('div', { class: 'msgClass' }, 'We could not access this Tweet.') // define css for 'msgClass' in your page
+        var msg = h('div', { class: 'msgClass' }, 'Whoops! We couldn\'t access this Tweet.') // define css for 'msgClass' in your page
         return h('div', this.isTweetLoaded ? (this.isTweetAvailable ? undefined : [msg]) : this.$slots.default)
     }
 }
