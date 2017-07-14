@@ -16,6 +16,7 @@ jspm i npm:vue-tweet-embed
 import Tweet from 'vue-tweet-embed'
 
 <Tweet :id="'692527862369357824'"></Tweet>
+<Tweet :id="'14'"></Tweet>	// test tweet not available or deleted
 ```
 
 You don't have to put `//platform.twitter.com/widgets.js` script in your index.html as this lib will
