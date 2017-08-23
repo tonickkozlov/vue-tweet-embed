@@ -36,12 +36,12 @@ export default {
             : renderTweet(this.id, this.$el, this.options)
         )
         .then((data) => {
-            this.isTweetLoaded = true
             if (data === undefined) {
                 this.isTweetAvailable = false
             } else {
                 this.isTweetAvailable = true
             }
+            this.isTweetLoaded = true
         })
     },
     render (h) {
