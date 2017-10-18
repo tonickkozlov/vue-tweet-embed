@@ -19,13 +19,21 @@ export default {
     data () {
         return {
             isTweetLoaded: false,
-            isTweetAvailable: true
+            isTweetAvailable: false
         }
     },
     props: {
         id: {
             type: String,
             required: true
+        },
+        errorMessage: {
+            type: String,
+            default: 'Whoops! We couldn\'t access this Tweet.'
+        },
+        errorMessageClass: {
+            type: String,
+            required: false
         },
         options: Object
     },
@@ -35,17 +43,19 @@ export default {
             .then(() => renderTweet(this.id, this.$el, this.options))
             : renderTweet(this.id, this.$el, this.options)
         )
-        .then((data) => {
-            if (data === undefined) {
-                this.isTweetAvailable = false
-            } else {
-                this.isTweetAvailable = true
-            }
+        .then(data => {
+            this.isTweetAvailable = (data !== undefined)
             this.isTweetLoaded = true
         })
     },
     render (h) {
-        var msg = h('div', { class: 'msgClass' }, 'Whoops! We couldn\'t access this Tweet.') // define css for 'msgClass' in your page
-        return h('div', this.isTweetLoaded ? (this.isTweetAvailable ? undefined : [msg]) : this.$slots.default)
+        if (this.isTweetLoaded && this.isTweetAvailable) {
+            return h('div')
+        }
+        if (this.isTweetLoaded && !this.isTweetAvailable) {
+            const $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage)
+            return h('div', [$errorMsg])
+        }
+        return h('div', this.$slots.default)
     }
 }

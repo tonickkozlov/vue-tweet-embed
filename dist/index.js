@@ -24,7 +24,7 @@ exports.default = {
     data: function data() {
         return {
             isTweetLoaded: false,
-            isTweetAvailable: true
+            isTweetAvailable: false
         };
     },
 
@@ -32,6 +32,14 @@ exports.default = {
         id: {
             type: String,
             required: true
+        },
+        errorMessage: {
+            type: String,
+            default: 'Whoops! We couldn\'t access this Tweet.'
+        },
+        errorMessageClass: {
+            type: String,
+            required: false
         },
         options: Object
     },
@@ -41,16 +49,18 @@ exports.default = {
         (!window.twttr ? addScript('//platform.twitter.com/widgets.js').then(function () {
             return renderTweet(_this.id, _this.$el, _this.options);
         }) : renderTweet(this.id, this.$el, this.options)).then(function (data) {
-            if (data === undefined) {
-                _this.isTweetAvailable = false;
-            } else {
-                _this.isTweetAvailable = true;
-            }
+            _this.isTweetAvailable = data !== undefined;
             _this.isTweetLoaded = true;
         });
     },
     render: function render(h) {
-        var msg = h('div', { class: 'msgClass' }, 'Whoops! We couldn\'t access this Tweet.'); // define css for 'msgClass' in your page
-        return h('div', this.isTweetLoaded ? this.isTweetAvailable ? undefined : [msg] : this.$slots.default);
+        if (this.isTweetLoaded && this.isTweetAvailable) {
+            return h('div');
+        }
+        if (this.isTweetLoaded && !this.isTweetAvailable) {
+            var $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage);
+            return h('div', [$errorMsg]);
+        }
+        return h('div', this.$slots.default);
     }
 };
