@@ -23,7 +23,8 @@ function renderTweet(id, $el, options) {
 exports.default = {
     data: function data() {
         return {
-            isTweetLoaded: false
+            isTweetLoaded: false,
+            isTweetAvailable: true
         };
     },
 
@@ -39,11 +40,17 @@ exports.default = {
 
         (!window.twttr ? addScript('//platform.twitter.com/widgets.js').then(function () {
             return renderTweet(_this.id, _this.$el, _this.options);
-        }) : renderTweet(this.id, this.$el, this.options)).then(function () {
+        }) : renderTweet(this.id, this.$el, this.options)).then(function (data) {
+            if (data === undefined) {
+                _this.isTweetAvailable = false;
+            } else {
+                _this.isTweetAvailable = true;
+            }
             _this.isTweetLoaded = true;
         });
     },
     render: function render(h) {
-        return h('div', this.isTweetLoaded ? undefined : this.$slots.default);
+        var msg = h('div', { class: 'msgClass' }, 'Whoops! We couldn\'t access this Tweet.'); // define css for 'msgClass' in your page
+        return h('div', this.isTweetLoaded ? this.isTweetAvailable ? undefined : [msg] : this.$slots.default);
     }
 };
