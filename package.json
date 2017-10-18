@@ -1,6 +1,6 @@
 {
   "name": "vue-tweet-embed",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Embed tweets in your vue.js app",
   "main": "dist/index.js",
   "scripts": {
