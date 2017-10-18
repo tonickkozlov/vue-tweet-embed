@@ -18,7 +18,8 @@ function renderTweet (id, $el, options) {
 export default {
     data () {
         return {
-            isTweetLoaded: false
+            isTweetLoaded: false,
+            isTweetAvailable: true
         }
     },
     props: {
@@ -34,11 +35,17 @@ export default {
             .then(() => renderTweet(this.id, this.$el, this.options))
             : renderTweet(this.id, this.$el, this.options)
         )
-        .then(() => {
+        .then((data) => {
+            if (data === undefined) {
+                this.isTweetAvailable = false
+            } else {
+                this.isTweetAvailable = true
+            }
             this.isTweetLoaded = true
         })
     },
     render (h) {
-        return h('div', this.isTweetLoaded ? undefined : this.$slots.default)
+        var msg = h('div', { class: 'msgClass' }, 'Whoops! We couldn\'t access this Tweet.') // define css for 'msgClass' in your page
+        return h('div', this.isTweetLoaded ? (this.isTweetAvailable ? undefined : [msg]) : this.$slots.default)
     }
 }

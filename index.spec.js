@@ -143,3 +143,75 @@ test.cb('Should show children while tweet is not loaded', t => {
         t.end()
     }, 0)
 })
+
+test('Should call twitter embed library with own id here tweet is NA or deleted, element', t => {
+    const { Tweet, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTweetEmbed: spy(() => {})
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend(Tweet)
+    const vm = new Ctor({
+        propsData: {
+            id: '14' /* options not specified */
+        }
+    }).$mount()
+
+    t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '14')
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
+})
+
+test('Should call twitter embed library with passed options  here tweet(id) is NA or deleted', t => {
+    const { Tweet, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTweetEmbed: spy(() => {})
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend(Tweet)
+    const vm = new Ctor({
+        propsData: {
+            id: '14',
+            options: { foo1: 'bar1' }
+        }
+    }).$mount()
+
+    t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '14')
+    t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
+    t.deepEqual(mockTwttr.widgets.createTweetEmbed.args[0][2], { foo1: 'bar1' })
+})
+
+test.cb('Should show children while tweet is not loaded', t => {
+
+    const { Tweet, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTweetEmbed: () => {
+                // emulate tweet being loaded
+                return Promise.resolve()
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Tweet id="14"><div id="foo1">hi</div></Tweet>',
+        components: { Tweet }
+    })
+    const vm = new Ctor().$mount()
+
+    t.truthy(vm.$el.querySelector('#foo1'))
+    setTimeout(() => {
+        t.falsy(vm.$el.querySelector('#foo1'))
+        t.end()
+    }, 0)
+})
