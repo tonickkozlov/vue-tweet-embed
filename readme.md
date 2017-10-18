@@ -1,7 +1,7 @@
 # vue-tweet-embed
 
-Embed tweets in your vue.js app
-inspired by https://github.com/capaj/react-tweet-embed
+Embed tweets in your vue.js app.  
+Inspired by https://github.com/capaj/react-tweet-embed
 
 ## Install
 ```
@@ -44,12 +44,10 @@ component. Placeholder content will be removed automatically once the tweet has 
 ```
 
 
-## Show some css effect to deleted tweet message - "We could not access this Tweet."
+## Show some text if the tweet is unavailable
 
-Define "msgClass" css class with your css in your page.
-
-```
-.msgClass {
-	// styles goes here
-}
+Tweets that could not be loaded can be replaced with custom text.
+A custom class can be specifier as well.
+```javascript
+<Tweet :id="'14'" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"></Tweet>
 ```
