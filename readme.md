@@ -5,15 +5,26 @@ Inspired by https://github.com/capaj/react-tweet-embed
 
 ## Install
 ```
-npm i vue-tweet-embed
-#or
-jspm i npm:vue-tweet-embed
+npm install vue-tweet-embed
 ```
 
+## Supported components
+Currently only Tweet and Moment components are supported form Twitter's widget API.  
+Components can be imported in one statement:
+```javascript
+import { Tweet, Moment } from 'vue-tweet-embed'
+```
+or individually
+```javascript
+import Tweet from 'vue-tweet-embed/tweet'
+import Moment from 'vue-tweet-embed/moment'
+```
+
+Moment component can be used the same way Tweet component is used (see below).
 ## Quickstart
 
 ```javascript
-import Tweet from 'vue-tweet-embed'
+import { Tweet } from 'vue-tweet-embed'
 
 <Tweet :id="'692527862369357824'"></Tweet>
 <Tweet :id="'14'"></Tweet>	// test tweet not available or deleted

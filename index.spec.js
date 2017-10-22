@@ -16,13 +16,13 @@ const createEnv = (scripts = []) => {
                 const Vue = window.Vue
                 const document = window.document
                 // require a new instance of Tweet every time to avoid side-effects
-                const Tweet = require('./index.js').default
+                const { Tweet, Moment } = require('./dist')
 
                 // set global after initialization of Vue
                 global.window = window
                 global.document = document
 
-                resolve({ Vue, Tweet, window, document })
+                resolve({ Vue, Tweet, Moment, window, document })
             }
         })
     })
@@ -35,8 +35,29 @@ test.beforeEach(t => {
 })
 
 test.afterEach(() => {
-    // remove old cached versoin of Tweet every time to avoid side-effects
-    decache('./index.js')
+    // remove old cached every time to avoid side-effects
+    decache('./dist')
+    decache('./dist/tweet')
+    decache('./dist/moment')
+})
+
+// CORE TESTS (injecting platform script)
+test('Tweet Should be available on module level as well as per-component level', t => {
+    const { Tweet } = require('./dist')
+    t.truthy(Tweet)
+    t.truthy(Tweet.data)
+    const TweetL = require('./dist/tweet').default
+    t.truthy(TweetL)
+    t.is(Tweet, TweetL)
+})
+
+test('Moment Should be available on module level as well as per-component level', t => {
+    const { Moment } = require('./dist')
+    t.truthy(Moment)
+    t.truthy(Moment.data)
+    const MomentL = require('./dist/moment').default
+    t.truthy(MomentL)
+    t.is(Moment, MomentL)
 })
 
 test('Should inject twitter embed script if none is given', t => {
@@ -62,84 +83,37 @@ test('Should not inject more than one script par page', t => {
     t.is($scripts.length, 1)
 })
 
-test('Should not inject anything if a twttr object is set on a window', t => {
-    const { Tweet, Vue, document, window } = t.context
-    window.twttr = { foo: 'bar' }
-    const Ctor = Vue.extend(Tweet)
-    new Ctor().$mount()
-
-    const $script = document.querySelector('script[src="//platform.twitter.com/widgets.js"]')
-    t.true($script === null)
-})
-
-test('Should call twitter embed library with own id, element', t => {
-    const { Tweet, Vue, window } = t.context
-    const mockTwttr = {
-        widgets: {
-            createTweetEmbed: spy(() => {})
-        }
-    }
-    window.twttr = mockTwttr
-
-    const Ctor = Vue.extend(Tweet)
-    const vm = new Ctor({
-        propsData: {
-            id: '123' /* options not specified */
-        }
-    }).$mount()
-
-    t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '123')
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
-})
-
-test('Should call twitter embed library with passed options', t => {
-    const { Tweet, Vue, window } = t.context
-    const mockTwttr = {
-        widgets: {
-            createTweetEmbed: spy(() => {})
-        }
-    }
-    window.twttr = mockTwttr
-
-    const Ctor = Vue.extend(Tweet)
-    const vm = new Ctor({
-        propsData: {
-            id: '123',
-            options: { foo: 'bar' }
-        }
-    }).$mount()
-
-    t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '123')
-    t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
-    t.deepEqual(mockTwttr.widgets.createTweetEmbed.args[0][2], { foo: 'bar' })
-})
-
+// TWEET COMPONENT TEST
 test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
     const { Tweet, Vue, window, document } = t.context
     const mockTwttr = {
         widgets: {
-            createTweetEmbed: (tweetId, parent) => {
+            createTweetEmbed: spy((tweetId, parent) => {
                 const $mockTweet = document.createElement('div')
                 $mockTweet.setAttribute('id', 'loadedTweet')
                 $mockTweet.innerText = 'tweet text'
                 parent.appendChild($mockTweet)
                 return Promise.resolve($mockTweet)
-            }
+            })
         }
     }
     window.twttr = mockTwttr
 
     const Ctor = Vue.extend({
-        template: '<Tweet id="123"></Tweet>',
+        template: '<Tweet id="123" :options="{foo:\'bar\'}"></Tweet>',
         components: { Tweet }
     })
     const vm = new Ctor().$mount()
 
     setTimeout(() => {
+        // check that library was called with correct options
+        t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
+        t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
+        t.is(mockTwttr.widgets.createTweetEmbed.args[0][0], '123')
+        t.is(mockTwttr.widgets.createTweetEmbed.args[0][1], vm.$el)
+        t.deepEqual(mockTwttr.widgets.createTweetEmbed.args[0][2], { foo: 'bar' })
+
+        // check that the element was indeed injected
         const $loadedTweet = vm.$el.querySelector('#loadedTweet')
         t.is($loadedTweet.id, 'loadedTweet')
         t.is($loadedTweet.innerText, 'tweet text')
@@ -214,6 +188,121 @@ test.cb('Should show children while tweet is not loaded', t => {
     const Ctor = Vue.extend({
         template: '<Tweet id="123"><div id="foo">hi</div></Tweet>',
         components: { Tweet }
+    })
+    const vm = new Ctor().$mount()
+
+    t.truthy(vm.$el.querySelector('#foo'))
+    setTimeout(() => {
+        t.falsy(vm.$el.querySelector('#foo'))
+        t.end()
+    }, 0)
+})
+
+// Tests for Moment component
+test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
+    const { Moment, Vue, window, document } = t.context
+    const mockTwttr = {
+        widgets: {
+            createMoment: spy((tweetId, parent) => {
+                const $mockTweet = document.createElement('div')
+                $mockTweet.setAttribute('id', 'loadedTweet')
+                $mockTweet.innerText = 'tweet text'
+                parent.appendChild($mockTweet)
+                return Promise.resolve($mockTweet)
+            })
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Moment id="123" :options="{foo:\'bar\'}"></Moment>',
+        components: { Moment }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        // check that library was called with correct options
+        t.is(mockTwttr.widgets.createMoment.callCount, 1)
+        t.is(mockTwttr.widgets.createMoment.args[0].length, 3)
+        t.is(mockTwttr.widgets.createMoment.args[0][0], '123')
+        t.is(mockTwttr.widgets.createMoment.args[0][1], vm.$el)
+        t.deepEqual(mockTwttr.widgets.createMoment.args[0][2], { foo: 'bar' })
+
+        // check that the element was indeed injected
+        const $loadedTweet = vm.$el.querySelector('#loadedTweet')
+        t.is($loadedTweet.id, 'loadedTweet')
+        t.is($loadedTweet.innerText, 'tweet text')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show an error message when tweet cannot be fetched', t => {
+    const { Moment, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createMoment: (tweetId, parent) => {
+                const $mockTweet = undefined // tweet not found
+                return Promise.resolve($mockTweet)
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Moment id="14"></Moment>',
+        components: { Moment }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        const $tweetContents = vm.$el.firstChild
+        t.is($tweetContents.innerHTML, 'Whoops! We couldn\'t access this Moment.')
+        t.is($tweetContents.className, '')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show a custom error message when tweet cannot be fetched and params are given', t => {
+    const { Moment, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createMoment: (tweetId, parent) => {
+                const $mockTweet = undefined // tweet not found
+                return Promise.resolve($mockTweet)
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Moment error-message="why you no work" error-message-class="moment-error" id="14"></Moment>',
+        components: { Moment }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        const $tweetContents = vm.$el.firstChild
+        t.is($tweetContents.innerHTML, 'why you no work')
+        t.is($tweetContents.className, 'moment-error')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show children while tweet is not loaded', t => {
+    const { Moment, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createMoment: () => {
+                // emulate tweet being loaded
+                return Promise.resolve()
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Moment id="123"><div id="foo">hi</div></Moment>',
+        components: { Moment }
     })
     const vm = new Ctor().$mount()
 
