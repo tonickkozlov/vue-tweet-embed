@@ -12,12 +12,13 @@ npm install vue-tweet-embed
 Currently only Tweet and Moment components are supported form Twitter's widget API.  
 Components can be imported in one statement:
 ```javascript
-import { Tweet, Moment } from 'vue-tweet-embed'
+import { Tweet, Moment, Timeline } from 'vue-tweet-embed'
 ```
 or individually
 ```javascript
 import Tweet from 'vue-tweet-embed/tweet'
 import Moment from 'vue-tweet-embed/moment'
+import Timeline from 'vue-tweet-embed/timeline'
 ```
 
 Moment component can be used the same way Tweet component is used (see below).

@@ -39,6 +39,7 @@ test.afterEach(() => {
     decache('./dist')
     decache('./dist/tweet')
     decache('./dist/moment')
+    decache('./dist/timeline')
 })
 
 // CORE TESTS (injecting platform script)
@@ -58,6 +59,15 @@ test('Moment Should be available on module level as well as per-component level'
     const MomentL = require('./dist/moment').default
     t.truthy(MomentL)
     t.is(Moment, MomentL)
+})
+
+test('Timeline Should be available on module level as well as per-component level', t => {
+    const { Timeline } = require('./dist')
+    t.truthy(Timeline)
+    t.truthy(Timeline.data)
+    const TimelineL = require('./dist/timeline').default
+    t.truthy(TimelineL)
+    t.is(Timeline, TimelineL)
 })
 
 test('Should inject twitter embed script if none is given', t => {

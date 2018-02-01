@@ -18,7 +18,10 @@ function addPlatformScript (src) {
 const defaultProps = {
     id: {
         type: String,
-        required: true
+        requred: true
+    },
+    sourceType: {
+        type: String
     },
     options: Object
 }
@@ -34,8 +37,10 @@ const twitterEmbedComponent = (me) => {
         },
         props: Object.assign({}, defaultProps, me.props),
         mounted () {
+            let params = (this.sourceType) ? { sourceType: this.sourceType, screenName: this.id } : this.id
+
             Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
-            .then(twttr => me.embedComponent(twttr, this.id, this.$el, this.options))
+            .then(twttr => me.embedComponent(twttr, params, this.$el, this.options))
             .then(data => {
                 this.isAvailable = (data !== undefined)
                 this.isLoaded = true
@@ -45,10 +50,12 @@ const twitterEmbedComponent = (me) => {
             if (this.isLoaded && this.isAvailable) {
                 return h('div')
             }
+
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
                 const $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage)
                 return h('div', [$errorMsg])
             }
+
             return h('div', this.$slots.default)
         }
     }
