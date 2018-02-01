@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _core = require('../core');
 
-var Moment = (0, _core.twitterEmbedComponent)({
+var Timeline = (0, _core.twitterEmbedComponent)({
     embedComponent: function embedComponent(twttr) {
         var _twttr$widgets;
 
@@ -14,13 +14,13 @@ var Moment = (0, _core.twitterEmbedComponent)({
             args[_key - 1] = arguments[_key];
         }
 
-        return (_twttr$widgets = twttr.widgets).createMoment.apply(_twttr$widgets, args);
+        return (_twttr$widgets = twttr.widgets).createTimeline.apply(_twttr$widgets, args);
     },
 
     props: {
         errorMessage: {
             type: String,
-            default: 'Whoops! We couldn\'t access this Moment.'
+            default: 'Whoops! We couldn\'t access this Timeline.'
         },
         errorMessageClass: {
             type: String,
@@ -33,4 +33,4 @@ var Moment = (0, _core.twitterEmbedComponent)({
     }
 });
 
-exports.default = Moment;
+exports.default = Timeline;
