@@ -48,7 +48,7 @@ const twitterEmbedComponent = (me) => {
         },
         render (h) {
             if (this.isLoaded && this.isAvailable) {
-                return h('div')
+                return h('div', { class: this.$props.widgetClass })
             }
 
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
@@ -56,7 +56,7 @@ const twitterEmbedComponent = (me) => {
                 return h('div', [$errorMsg])
             }
 
-            return h('div', this.$slots.default)
+            return h('div', { class: this.$props.widgetClass }, this.$slots.default)
         }
     }
 }

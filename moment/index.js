@@ -12,6 +12,10 @@ const Moment = twitterEmbedComponent({
         errorMessageClass: {
             type: String,
             required: false
+        },
+        widgetClass: {
+            type: String,
+            required: false
         }
     }
 })

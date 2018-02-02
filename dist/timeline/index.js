@@ -25,6 +25,10 @@ var Timeline = (0, _core.twitterEmbedComponent)({
         errorMessageClass: {
             type: String,
             required: false
+        },
+        widgetClass: {
+            type: String,
+            required: false
         }
     }
 });
