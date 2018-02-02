@@ -37,6 +37,9 @@ put it there if `twttr` is not found on window.
 
 ## Using Options
 
+
+### Tweet & Moment
+
 ```javascript
 <Tweet :id="'783943172057694208'" :options="{ cards: 'hidden' }"/>
 <Tweet :id="'771763270273294336'" :options="{ theme: 'dark' }"/>
@@ -44,6 +47,16 @@ put it there if `twttr` is not found on window.
 
 Embedded-Tweet Options Reference:
 https://dev.twitter.com/web/embedded-tweets/parameters
+
+### Timeline
+
+```javascript
+<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }"/>
+<Timeline :id="'twitterdev'" :sourceType="'likes'" :options="{ theme: 'dark' }"/>
+```
+
+Only `sourceType`: `profile` and `likes` are integrated. Embedded-Timeline Options Reference:
+https://dev.twitter.com/web/embedded-timelines/parameters
 
 
 ## Showing a placeholder while the tweet is being loaded
@@ -55,6 +68,13 @@ component. Placeholder content will be removed automatically once the tweet has 
 <Tweet :id="'783943172057694208'"/><div class="spinner"></div></Tweet>
 ```
 
+## Adding a custom class on the widget
+
+To add an extra class on the container when the widget is loaded just add the class(es) with the prop: `widget-class`
+
+```javascript
+<Timeline :id="'twitterdev'" :sourceType="'profile'" :widget-class="`mt-3 my-custom-class`"/></Timeline>
+```
 
 ## Show some text if the tweet is unavailable
 
