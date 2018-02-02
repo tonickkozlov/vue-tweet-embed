@@ -1,13 +1,13 @@
 import { twitterEmbedComponent } from '../core'
 
-const Moment = twitterEmbedComponent({
+const Timeline = twitterEmbedComponent({
     embedComponent (twttr, ...args) {
-        return twttr.widgets.createMoment(...args)
+        return twttr.widgets.createTimeline(...args)
     },
     props: {
         errorMessage: {
             type: String,
-            default: 'Whoops! We couldn\'t access this Moment.'
+            default: 'Whoops! We couldn\'t access this Timeline.'
         },
         errorMessageClass: {
             type: String,
@@ -20,4 +20,4 @@ const Moment = twitterEmbedComponent({
     }
 })
 
-export default Moment
+export default Timeline

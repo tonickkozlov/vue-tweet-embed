@@ -20,7 +20,10 @@ function addPlatformScript(src) {
 var defaultProps = {
     id: {
         type: String,
-        required: true
+        requred: true
+    },
+    sourceType: {
+        type: String
     },
     options: Object
 
@@ -38,8 +41,10 @@ var defaultProps = {
         mounted: function mounted() {
             var _this = this;
 
+            var params = this.sourceType ? { sourceType: this.sourceType, screenName: this.id } : this.id;
+
             Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
-                return me.embedComponent(twttr, _this.id, _this.$el, _this.options);
+                return me.embedComponent(twttr, params, _this.$el, _this.options);
             }).then(function (data) {
                 _this.isAvailable = data !== undefined;
                 _this.isLoaded = true;
@@ -47,13 +52,15 @@ var defaultProps = {
         },
         render: function render(h) {
             if (this.isLoaded && this.isAvailable) {
-                return h('div');
+                return h('div', { class: this.$props.widgetClass });
             }
+
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
                 var $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage);
                 return h('div', [$errorMsg]);
             }
-            return h('div', this.$slots.default);
+
+            return h('div', { class: this.$props.widgetClass }, this.$slots.default);
         }
     };
 };
