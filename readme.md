@@ -45,6 +45,16 @@ put it there if `twttr` is not found on window.
 Embedded-Tweet Options Reference:
 https://dev.twitter.com/web/embedded-tweets/parameters
 
+### Timeline
+
+```javascript
+<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }/>
+<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ theme: 'dark' }"/>
+```
+
+Only `sourceType`: `profile` and `likes` are integrated. Embedded-Timeline Options Reference:
+https://dev.twitter.com/web/embedded-timelines/parameters
+
 
 ## Showing a placeholder while the tweet is being loaded
 
