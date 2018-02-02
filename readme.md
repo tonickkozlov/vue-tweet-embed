@@ -51,7 +51,7 @@ https://dev.twitter.com/web/embedded-tweets/parameters
 ### Timeline
 
 ```javascript
-<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }/>
+<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }"/>
 <Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ theme: 'dark' }"/>
 ```
 
