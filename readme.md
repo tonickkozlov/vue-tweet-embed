@@ -37,6 +37,9 @@ put it there if `twttr` is not found on window.
 
 ## Using Options
 
+
+### Tweet & Moment
+
 ```javascript
 <Tweet :id="'783943172057694208'" :options="{ cards: 'hidden' }"/>
 <Tweet :id="'771763270273294336'" :options="{ theme: 'dark' }"/>
