@@ -116,7 +116,6 @@ test.cb('Should show a newly created element as tweet\'s immeditate child', t =>
     const vm = new Ctor().$mount()
 
     setTimeout(() => {
-        console.log(mockTwttr.widgets.createTweetEmbed.args)
         // check that library was called with correct options
         t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
         t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
@@ -330,8 +329,6 @@ test.cb('Should show a newly created element as tweet\'s immeditate child', t =>
     const mockTwttr = {
         widgets: {
             createTimeline: spy((userId, parent) => {
-                console.log(userId)
-
                 const $mockTweet = document.createElement('div')
                 $mockTweet.setAttribute('id', 'loadedTweet')
                 $mockTweet.setAttribute('sourceType', 'loadedSouceType')
@@ -420,7 +417,7 @@ test.cb('Should show a custom error message when timeline cannot be fetched and 
     }, 0)
 })
 
-test.cb('Should show children tineline tweet is not loaded', t => {
+test.cb('Should show children timeline tweet is not loaded', t => {
     const { Timeline, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
