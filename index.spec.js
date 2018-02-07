@@ -16,13 +16,13 @@ const createEnv = (scripts = []) => {
                 const Vue = window.Vue
                 const document = window.document
                 // require a new instance of Tweet every time to avoid side-effects
-                const { Tweet, Moment } = require('./dist')
+                const { Tweet, Moment, Timeline } = require('./dist')
 
                 // set global after initialization of Vue
                 global.window = window
                 global.document = document
 
-                resolve({ Vue, Tweet, Moment, window, document })
+                resolve({ Vue, Tweet, Moment, Timeline, window, document })
             }
         })
     })
@@ -39,6 +39,7 @@ test.afterEach(() => {
     decache('./dist')
     decache('./dist/tweet')
     decache('./dist/moment')
+    decache('./dist/timeline')
 })
 
 // CORE TESTS (injecting platform script)
@@ -58,6 +59,15 @@ test('Moment Should be available on module level as well as per-component level'
     const MomentL = require('./dist/moment').default
     t.truthy(MomentL)
     t.is(Moment, MomentL)
+})
+
+test('Timeline Should be available on module level as well as per-component level', t => {
+    const { Timeline } = require('./dist')
+    t.truthy(Timeline)
+    t.truthy(Timeline.data)
+    const TimelineL = require('./dist/timeline').default
+    t.truthy(TimelineL)
+    t.is(Timeline, TimelineL)
 })
 
 test('Should inject twitter embed script if none is given', t => {
@@ -106,6 +116,7 @@ test.cb('Should show a newly created element as tweet\'s immeditate child', t =>
     const vm = new Ctor().$mount()
 
     setTimeout(() => {
+        console.log(mockTwttr.widgets.createTweetEmbed.args)
         // check that library was called with correct options
         t.is(mockTwttr.widgets.createTweetEmbed.callCount, 1)
         t.is(mockTwttr.widgets.createTweetEmbed.args[0].length, 3)
@@ -303,6 +314,127 @@ test.cb('Should show children while tweet is not loaded', t => {
     const Ctor = Vue.extend({
         template: '<Moment id="123"><div id="foo">hi</div></Moment>',
         components: { Moment }
+    })
+    const vm = new Ctor().$mount()
+
+    t.truthy(vm.$el.querySelector('#foo'))
+    setTimeout(() => {
+        t.falsy(vm.$el.querySelector('#foo'))
+        t.end()
+    }, 0)
+})
+
+// Tests for Timeline component
+test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
+    const { Timeline, Vue, window, document } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTimeline: spy((userId, parent) => {
+                console.log(userId)
+
+                const $mockTweet = document.createElement('div')
+                $mockTweet.setAttribute('id', 'loadedTweet')
+                $mockTweet.setAttribute('sourceType', 'loadedSouceType')
+                $mockTweet.innerText = 'tweet text'
+                parent.appendChild($mockTweet)
+                return Promise.resolve($mockTweet)
+            })
+        }
+    }
+
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Timeline id="123" sourceType="profile" :options="{foo:\'bar\'}"></Timeline>',
+        components: { Timeline }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        // check that library was called with correct options
+        t.is(mockTwttr.widgets.createTimeline.callCount, 1)
+        t.is(mockTwttr.widgets.createTimeline.args[0].length, 3)
+        t.is(mockTwttr.widgets.createTimeline.args[0][0]['screenName'], '123')
+        t.is(mockTwttr.widgets.createTimeline.args[0][0]['sourceType'], 'profile')
+        t.is(mockTwttr.widgets.createTimeline.args[0][1], vm.$el)
+        t.deepEqual(mockTwttr.widgets.createTimeline.args[0][2], { foo: 'bar' })
+
+        // check that the element was indeed injected
+        const $loadedTweet = vm.$el.querySelector('#loadedTweet')
+
+        t.is($loadedTweet.id, 'loadedTweet')
+        t.is($loadedTweet.innerText, 'tweet text')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show an error message when timeline cannot be fetched', t => {
+    const { Timeline, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTimeline: (tweetId, parent) => {
+                const $mockTweet = undefined // tweet not found
+                return Promise.resolve($mockTweet)
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Timeline id="14" sourceType="profile"></Timeline>',
+        components: { Timeline }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        const $tweetContents = vm.$el.firstChild
+        t.is($tweetContents.innerHTML, 'Whoops! We couldn\'t access this Timeline.')
+        t.is($tweetContents.className, '')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show a custom error message when timeline cannot be fetched and params are given', t => {
+    const { Timeline, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTimeline: (tweetId, parent) => {
+                const $mockTweet = undefined // tweet not found
+                return Promise.resolve($mockTweet)
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Timeline error-message="why you no work" error-message-class="timeline-error" id="14"></Timeline>',
+        components: { Timeline }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        const $tweetContents = vm.$el.firstChild
+        t.is($tweetContents.innerHTML, 'why you no work')
+        t.is($tweetContents.className, 'timeline-error')
+        t.end()
+    }, 0)
+})
+
+test.cb('Should show children tineline tweet is not loaded', t => {
+    const { Timeline, Vue, window } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTimeline: () => {
+                // emulate tweet being loaded
+                return Promise.resolve()
+            }
+        }
+    }
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Timeline id="123" sourceType="profile"><div id="foo">hi</div></Timeline>',
+        components: { Timeline }
     })
     const vm = new Ctor().$mount()
 
