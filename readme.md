@@ -73,7 +73,7 @@ component. Placeholder content will be removed automatically once the tweet has 
 To add an extra class on the container when the widget is loaded just add the class(es) with the prop: `widget-class`
 
 ```javascript
-<Timeline :id="'twitterdev'" :sourceType="'profile'" :widget-class="`mt-3 my-custom-class`"/></Timeline>
+<Timeline :id="'twitterdev'" :source-type="'profile'" :widget-class="`mt-3 my-custom-class`"/></Timeline>
 ```
 
 ## Show some text if the tweet is unavailable
