@@ -94,7 +94,7 @@ test('Should not inject more than one script par page', t => {
 })
 
 // TWEET COMPONENT TEST
-test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
+test.cb('Should show a newly created Tweet element as tweet\'s immeditate child', t => {
     const { Tweet, Vue, window, document } = t.context
     const mockTwttr = {
         widgets: {
@@ -209,7 +209,7 @@ test.cb('Should show children while tweet is not loaded', t => {
 })
 
 // Tests for Moment component
-test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
+test.cb('Should show a newly created Moment element as tweet\'s immeditate child', t => {
     const { Moment, Vue, window, document } = t.context
     const mockTwttr = {
         widgets: {
@@ -246,7 +246,7 @@ test.cb('Should show a newly created element as tweet\'s immeditate child', t =>
     }, 0)
 })
 
-test.cb('Should show an error message when tweet cannot be fetched', t => {
+test.cb('Should show an error message when moment cannot be fetched', t => {
     const { Moment, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
@@ -272,7 +272,7 @@ test.cb('Should show an error message when tweet cannot be fetched', t => {
     }, 0)
 })
 
-test.cb('Should show a custom error message when tweet cannot be fetched and params are given', t => {
+test.cb('Should show a custom error message when moment cannot be fetched and params are given', t => {
     const { Moment, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
@@ -298,7 +298,7 @@ test.cb('Should show a custom error message when tweet cannot be fetched and par
     }, 0)
 })
 
-test.cb('Should show children while tweet is not loaded', t => {
+test.cb('Should show children while moment is not loaded', t => {
     const { Moment, Vue, window } = t.context
     const mockTwttr = {
         widgets: {
@@ -324,7 +324,7 @@ test.cb('Should show children while tweet is not loaded', t => {
 })
 
 // Tests for Timeline component
-test.cb('Should show a newly created element as tweet\'s immeditate child', t => {
+test.cb('Should show a newly created Timeline element as tweet\'s immeditate child', t => {
     const { Timeline, Vue, window, document } = t.context
     const mockTwttr = {
         widgets: {
