@@ -1,6 +1,6 @@
 'use strict';
 
-var addScriptPromise = null;
+var addScriptPromise = 0;
 
 /** Adds proviced script to the page, once **/
 function addPlatformScript(src) {
@@ -28,7 +28,8 @@ var defaultProps = {
     options: Object
 
     /** Basic function used to mount Twitter component */
-};var twitterEmbedComponent = function twitterEmbedComponent(me) {
+};
+var twitterEmbedComponent = function twitterEmbedComponent(me) {
     return {
         data: function data() {
             return {
@@ -41,7 +42,10 @@ var defaultProps = {
         mounted: function mounted() {
             var _this = this;
 
-            var params = this.sourceType ? { sourceType: this.sourceType, screenName: this.id } : this.id;
+            var params = this.sourceType ? {
+                sourceType: this.sourceType,
+                screenName: this.id
+            } : this.id;
 
             Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
                 return me.embedComponent(twttr, params, _this.$el, _this.options);
@@ -52,17 +56,26 @@ var defaultProps = {
         },
         render: function render(h) {
             if (this.isLoaded && this.isAvailable) {
-                return h('div', { class: this.$props.widgetClass });
+                return h('div', {
+                    class: this.$props.widgetClass
+                });
             }
 
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
-                var $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage);
+                var $errorMsg = h('div', {
+                    class: this.$props.errorMessageClass
+                }, this.$props.errorMessage);
                 return h('div', [$errorMsg]);
             }
 
-            return h('div', { class: this.$props.widgetClass }, this.$slots.default);
+            return h('div', {
+                class: this.$props.widgetClass
+            }, this.$slots.default);
         }
     };
 };
 
-module.exports = { addPlatformScript: addPlatformScript, twitterEmbedComponent: twitterEmbedComponent };
+module.exports = {
+    addPlatformScript: addPlatformScript,
+    twitterEmbedComponent: twitterEmbedComponent
+};
