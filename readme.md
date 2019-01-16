@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/tonickkozlov/vue-tweet-embed.svg?style=svg)](https://circleci.com/gh/tonickkozlov/vue-tweet-embed)
+
 # vue-tweet-embed
 
 Embed tweets in your vue.js app.  
