@@ -1,6 +1,6 @@
 {
   "name": "vue-tweet-embed",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Embed tweets in your vue.js app",
   "main": "dist",
   "scripts": {
@@ -58,7 +58,9 @@
     ],
     "babel": {
       "testOptions": {
-        "presets": ["@babel/preset-env"]
+        "presets": [
+          "@babel/preset-env"
+        ]
       }
     }
   },
