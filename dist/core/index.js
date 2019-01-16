@@ -1,6 +1,6 @@
 "use strict";
 
-var addScriptPromise = null;
+var addScriptPromise = 0;
 /** Adds proviced script to the page, once **/
 
 function addPlatformScript(src) {
