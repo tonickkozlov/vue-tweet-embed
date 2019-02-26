@@ -11,7 +11,7 @@ npm install vue-tweet-embed
 ```
 
 ## Supported components
-Currently only Tweet and Moment components are supported form Twitter's widget API.  
+Tweet, Timeline and Moment components are supported from Twitter's widget API.  
 Components can be imported in one statement:
 ```javascript
 import { Tweet, Moment, Timeline } from 'vue-tweet-embed'
@@ -55,9 +55,10 @@ https://dev.twitter.com/web/embedded-tweets/parameters
 ```javascript
 <Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }"/>
 <Timeline :id="'twitterdev'" :sourceType="'likes'" :options="{ theme: 'dark' }"/>
+<Timeline :id="'twitterdev'" :sourceType="'list'" :slug="'national-parks'" />
 ```
 
-Only `sourceType`: `profile` and `likes` are integrated. Embedded-Timeline Options Reference:
+Embedded-Timeline Options Reference:
 https://dev.twitter.com/web/embedded-timelines/parameters
 
 
