@@ -67,7 +67,7 @@ To show some content to the user while the tweet is being loaded, just put it in
 component. Placeholder content will be removed automatically once the tweet has finished loading.
 
 ```javascript
-<Tweet :id="'783943172057694208'"/><div class="spinner"></div></Tweet>
+<Tweet :id="'783943172057694208'"><div class="spinner"></div></Tweet>
 ```
 
 ## Adding a custom class on the widget
@@ -83,5 +83,5 @@ To add an extra class on the container when the widget is loaded just add the cl
 Tweets that could not be loaded can be replaced with custom text.
 A custom class can be specifier as well.
 ```javascript
-<Tweet :id="'14'" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"></Tweet>
+<Tweet :id="'14'" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"/>
 ```
