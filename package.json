@@ -41,7 +41,7 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
-    "ava": "1.0.0-rc.1",
+    "ava": "^1.4.1",
     "decache": "^4.1.0",
     "eslint": "^3.17.1",
     "eslint-config-standard": "^7.0.1",
