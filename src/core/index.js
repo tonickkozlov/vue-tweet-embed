@@ -18,9 +18,12 @@ function addPlatformScript(src) {
 const defaultProps = {
     id: {
         type: String,
-        requred: true
+        required: true
     },
     sourceType: {
+        type: String
+    },
+    slug: {
         type: String
     },
     options: Object
@@ -37,7 +40,20 @@ const twitterEmbedComponent = (me) => {
         },
         props: Object.assign({}, defaultProps, me.props),
         mounted() {
-            let params = (this.sourceType) ? { sourceType: this.sourceType, screenName: this.id } : this.id
+            let params
+
+            if (this.sourceType) {
+                params = { sourceType: this.sourceType }
+
+                if (this.sourceType === 'list') {
+                    params.ownerScreenName = this.id
+                    params.slug = this.slug
+                } else {
+                    params.screenName = this.id
+                }
+            } else {
+                params = this.id
+            }
 
             Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
                 .then(twttr => me.embedComponent(twttr, params, this.$el, this.options))

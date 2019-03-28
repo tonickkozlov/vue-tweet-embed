@@ -29,8 +29,8 @@ Moment component can be used the same way Tweet component is used (see below).
 ```javascript
 import { Tweet } from 'vue-tweet-embed'
 
-<Tweet :id="'692527862369357824'"></Tweet>
-<Tweet :id="'14'"></Tweet>	// test tweet not available or deleted
+<Tweet id="692527862369357824"></Tweet>
+<Tweet id="14"></Tweet>	// test tweet not available or deleted
 ```
 
 You don't have to put `//platform.twitter.com/widgets.js` script in your index.html as this lib will
@@ -53,11 +53,12 @@ https://dev.twitter.com/web/embedded-tweets/parameters
 ### Timeline
 
 ```javascript
-<Timeline :id="'twitterdev'" :sourceType="'profile'" :options="{ tweetLimit: '3' }"/>
-<Timeline :id="'twitterdev'" :sourceType="'likes'" :options="{ theme: 'dark' }"/>
+<Timeline sourceType="profile" id="twitterdev" :options="{ tweetLimit: '3' }"/>
+<Timeline sourceType="likes" id="twitterdev" :options="{ theme: 'dark' }"/>
+<Timeline sourceType="list" id="twitterdev" slug="national-parks" :options="{ tweetLimit: '3' }"/>
 ```
 
-Only `sourceType`: `profile` and `likes` are integrated. Embedded-Timeline Options Reference:
+Only `sourceType`: `profile`, `likes` and `list` are integrated. Embedded-Timeline Options Reference:
 https://dev.twitter.com/web/embedded-timelines/parameters
 
 
@@ -67,7 +68,7 @@ To show some content to the user while the tweet is being loaded, just put it in
 component. Placeholder content will be removed automatically once the tweet has finished loading.
 
 ```javascript
-<Tweet :id="'783943172057694208'"><div class="spinner"></div></Tweet>
+<Tweet id="783943172057694208"><div class="spinner"></div></Tweet>
 ```
 
 ## Adding a custom class on the widget
@@ -75,7 +76,7 @@ component. Placeholder content will be removed automatically once the tweet has 
 To add an extra class on the container when the widget is loaded just add the class(es) with the prop: `widget-class`
 
 ```javascript
-<Timeline :id="'twitterdev'" :source-type="'profile'" :widget-class="`mt-3 my-custom-class`"/></Timeline>
+<Timeline id="twitterdev" source-type="profile" widget-class="mt-3 my-custom-class"/></Timeline>
 ```
 
 ## Show some text if the tweet is unavailable
@@ -83,5 +84,5 @@ To add an extra class on the container when the widget is loaded just add the cl
 Tweets that could not be loaded can be replaced with custom text.
 A custom class can be specifier as well.
 ```javascript
-<Tweet :id="'14'" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"/>
+<Tweet id="14" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"/>
 ```
