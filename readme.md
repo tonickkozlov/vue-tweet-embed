@@ -48,7 +48,7 @@ put it there if `twttr` is not found on window.
 ```
 
 Embedded-Tweet Options Reference:
-https://dev.twitter.com/web/embedded-tweets/parameters
+https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/guides/embedded-tweet-parameter-reference
 
 ### Timeline
 
