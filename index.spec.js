@@ -365,6 +365,48 @@ test.cb('Should show a newly created Timeline element as tweet\'s immeditate chi
     }, 0)
 })
 
+test.cb('Should show a newly created Timeline element as list\'s immeditate child', t => {
+    const { Timeline, Vue, window, document } = t.context
+    const mockTwttr = {
+        widgets: {
+            createTimeline: spy((userId, parent) => {
+                const $mockTweet = document.createElement('div')
+                $mockTweet.setAttribute('id', 'loadedTweet')
+                $mockTweet.setAttribute('sourceType', 'loadedSouceType')
+                $mockTweet.innerText = 'tweet text'
+                parent.appendChild($mockTweet)
+                return Promise.resolve($mockTweet)
+            })
+        }
+    }
+
+    window.twttr = mockTwttr
+
+    const Ctor = Vue.extend({
+        template: '<Timeline sourceType="list" id="TwitterDev" slug="national-parks" :options="{foo:\'bar\'}"></Timeline>',
+        components: { Timeline }
+    })
+    const vm = new Ctor().$mount()
+
+    setTimeout(() => {
+        // check that library was called with correct options
+        t.is(mockTwttr.widgets.createTimeline.callCount, 1)
+        t.is(mockTwttr.widgets.createTimeline.args[0].length, 3)
+        t.is(mockTwttr.widgets.createTimeline.args[0][0]['sourceType'], 'list')
+        t.is(mockTwttr.widgets.createTimeline.args[0][0]['ownerScreenName'], 'TwitterDev')
+        t.is(mockTwttr.widgets.createTimeline.args[0][0]['slug'], 'national-parks')
+        t.is(mockTwttr.widgets.createTimeline.args[0][1], vm.$el)
+        t.deepEqual(mockTwttr.widgets.createTimeline.args[0][2], { foo: 'bar' })
+
+        // check that the element was indeed injected
+        const $loadedTweet = vm.$el.querySelector('#loadedTweet')
+
+        t.is($loadedTweet.id, 'loadedTweet')
+        t.is($loadedTweet.innerText, 'tweet text')
+        t.end()
+    }, 0)
+})
+
 test.cb('Should show an error message when timeline cannot be fetched', t => {
     const { Timeline, Vue, window } = t.context
     const mockTwttr = {
