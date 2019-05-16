@@ -86,3 +86,7 @@ A custom class can be specifier as well.
 ```javascript
 <Tweet id="14" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"/>
 ```
+Custom html message:
+```javascript
+<tweet error-message="Sorry the tweet is not available. Search on <a href='https://twitter.com'>twitter</a>"></tweet>
+```
