@@ -2,9 +2,9 @@ import 'regenerator-runtime/runtime'
 import test from 'ava'
 const express = require('express');
 const puppeteer = require('puppeteer');
-const PORT=3002
+const PORT = 3002
 
-async function setUp(port=PORT) {
+async function setUp(path, port = PORT) {
   const app = express()
 
   app.use("/", express.static(__dirname + '/examples'));
@@ -16,24 +16,24 @@ async function setUp(port=PORT) {
   });
   const page = await browser.newPage();
   page.setDefaultTimeout(10000)
-  await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle0' });
+  await page.goto(`http://localhost:${port}${path}`, { waitUntil: 'networkidle0' });
 
   return { server, browser, page }
 }
 
 async function tearDown(ctx) {
-    await ctx.browser.close()
-    await ctx.server.close()
+  await ctx.browser.close()
+  await ctx.server.close()
 }
 
 async function saveScreenshotWithTimestamp(page, pathPrefix) {
   const screenshotFilename = page + (new Date().getTime()) + '.jpg'
-  await page.screenshot({path: screenshotFilename});
+  await page.screenshot({ path: screenshotFilename });
   console.info(`Screenshot saved to ${screenshotFilename}`)
 }
 
-test('my passing test', async t => {
-  const ctx = await setUp()
+test('Tweet is rendered successfully', async t => {
+  const ctx = await setUp('/tweet')
   const { page } = ctx
 
   const tweetHandle = await page.waitForSelector('.twitter-tweet-rendered')

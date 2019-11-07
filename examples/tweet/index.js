@@ -1,5 +1,5 @@
 const Vue = require('vue/dist/vue.js')
-const Tweet = require('../dist/tweet').default
+const Tweet = require('../../dist/tweet').default
 
 new Vue({
   el: '#app',
