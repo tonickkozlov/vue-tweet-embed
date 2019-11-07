@@ -10,7 +10,7 @@
     "build": "./node_modules/.bin/babel src --out-dir dist",
     "clean": "rimraf dist",
     "prepublish": "npm test && npm run clean && npm run build",
-    "preexamples": "npx webpack-cli --mode=development examples/single-tweet.js -o examples/single-tweet.build.js",
+    "preexamples": "cd examples; ls | xargs -n1 -I% npx webpack-cli --mode=development %/index.js -o %/index.build.js",
     "examples": "node example_server.js"
   },
   "repository": {
