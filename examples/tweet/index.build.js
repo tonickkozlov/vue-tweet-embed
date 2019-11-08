@@ -172,7 +172,7 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Vue = __webpack_require__(/*! vue/dist/vue.js */ \"../node_modules/vue/dist/vue.js\")\nconst Tweet = __webpack_require__(/*! ../../dist/tweet */ \"../dist/tweet/index.js\").default\n\nnew Vue({\n  el: '#app',\n  template: `<div>\n    <div id=\"tweetLoaded\">\n      <p>Tweet that renders successfully:</p>\n      <Tweet :id=\"'1129378242283098112'\"></Tweet>\n    </div>\n    <div id=\"loadingError\">\n      <p>Error in loading tweet:</p>\n      <Tweet :id=\"'y-u-no-load'\" error-message=\"This tweet could not be loaded\"></Tweet>\n    </div>\n    </div>`,\n  components: {\n    Tweet,\n  }\n})\n\n\n//# sourceURL=webpack:///./tweet/index.js?");
+eval("const Vue = __webpack_require__(/*! vue/dist/vue.js */ \"../node_modules/vue/dist/vue.js\")\nconst Tweet = __webpack_require__(/*! ../../dist/tweet */ \"../dist/tweet/index.js\").default\n\nnew Vue({\n  el: '#app',\n  template: `<div>\n    <div id=\"tweetLoaded\">\n      <p>Tweet that renders successfully:</p>\n      <Tweet :id=\"'1129378242283098112'\"></Tweet>\n    </div>\n    <div id=\"loadingError\">\n      <p>Error in loading tweet:</p>\n      <Tweet :id=\"'y-u-no-load'\" error-message=\"This tweet could not be loaded\"></Tweet>\n    </div>\n    <div id=\"htmlError\">\n      <p>HTML Error in loading tweet:</p>\n      <Tweet :id=\"'y-u-no-html-error'\" error-message=\"Sorry the tweet is not available. Search on <a href='https://twitter.com'>twitter</a>\"></Tweet>\n    </div>\n    </div>`,\n  components: {\n    Tweet,\n  }\n})\n\n\n//# sourceURL=webpack:///./tweet/index.js?");
 
 /***/ })
 

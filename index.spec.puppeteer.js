@@ -65,6 +65,23 @@ test('Displays an error when a tweet cannot be loaded', async t => {
   await tearDown(ctx)
 })
 
+test('Displays an error in HTML when a tweet cannot be loaded', async t => {
+  const ctx = await setUp('/tweet')
+  const { page } = ctx
+
+  // if the <a> element can be queried, the HTML is rendered correctly
+  const tweetHandle = await page.waitForSelector('#htmlError a')
+  const innerText = await tweetHandle.evaluate(node => node.innerText)
+  const expected = "twitter"
+  if (expected != innerText) {
+    await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
+    t.fail(`'${expected}' is not equal to '${innerText}'`)
+  }
+  t.pass()
+  await tearDown(ctx)
+})
+
+
 test('Moment is rendered successfully', async t => {
   const ctx = await setUp('/moment')
   const { page } = ctx
