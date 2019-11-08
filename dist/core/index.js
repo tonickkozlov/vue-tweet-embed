@@ -8,7 +8,7 @@ function addPlatformScript(src) {
     var s = document.createElement('script');
     s.setAttribute('src', src);
     document.body.appendChild(s);
-    addScriptPromise = new Promise(function (resolve, reject) {
+    addScriptPromise = new Promise(function (resolve) {
       s.onload = function () {
         resolve(window.twttr);
       };

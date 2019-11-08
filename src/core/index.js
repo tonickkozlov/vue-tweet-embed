@@ -6,7 +6,7 @@ function addPlatformScript(src) {
         const s = document.createElement('script')
         s.setAttribute('src', src)
         document.body.appendChild(s)
-        addScriptPromise = new Promise((resolve, reject) => {
+        addScriptPromise = new Promise(resolve => {
             s.onload = () => {
                 resolve(window.twttr)
             }
