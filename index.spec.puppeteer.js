@@ -30,7 +30,7 @@ async function tearDown(ctx) {
 }
 
 async function saveScreenshotWithTimestamp(page, pathPrefix) {
-  const screenshotFilename = page + (new Date().getTime()) + '.jpg'
+  const screenshotFilename = page + (new Date().getTime()).toString() + '.jpg'
   await page.screenshot({ path: screenshotFilename });
   console.info(`Screenshot saved to ${screenshotFilename}`)
 }
