@@ -1,3 +1,7 @@
+/**
+ * Runs Puppeteer assertions againt examples
+ * Run `npm run examples` and visit http://localhost:3002 for more info
+ */
 import 'regenerator-runtime/runtime'
 import test from 'ava'
 const express = require('express');
@@ -26,7 +30,7 @@ async function tearDown(ctx) {
 }
 
 async function saveScreenshotWithTimestamp(page, pathPrefix) {
-  const screenshotFilename = page + (new Date().getTime()) + '.jpg'
+  const screenshotFilename = page + (new Date().getTime()).toString() + '.jpg'
   await page.screenshot({ path: screenshotFilename });
   console.info(`Screenshot saved to ${screenshotFilename}`)
 }
@@ -35,7 +39,7 @@ test('Tweet is rendered successfully', async t => {
   const ctx = await setUp('/tweet')
   const { page } = ctx
 
-  const tweetHandle = await page.waitForSelector('.twitter-tweet-rendered')
+  const tweetHandle = await page.waitForSelector('#tweetLoaded .twitter-tweet-rendered')
   const innerHTML = await tweetHandle.evaluate(node => node.shadowRoot.innerHTML)
   const expected = "What if you didn't need to manually install Node"
   if (!innerHTML.includes(expected)) {
@@ -45,6 +49,38 @@ test('Tweet is rendered successfully', async t => {
   t.pass()
   await tearDown(ctx)
 });
+
+test('Displays an error when a tweet cannot be loaded', async t => {
+  const ctx = await setUp('/tweet')
+  const { page } = ctx
+
+  const tweetHandle = await page.waitForSelector('#loadingError')
+  const innerHTML = await tweetHandle.evaluate(node => node.innerText)
+  const expected = "This tweet could not be loaded"
+  if (!innerHTML.includes(expected)) {
+    await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
+    t.fail(`Did not find '${expected}' in '${innerHTML}'`)
+  }
+  t.pass()
+  await tearDown(ctx)
+})
+
+test('Displays an error in HTML when a tweet cannot be loaded', async t => {
+  const ctx = await setUp('/tweet')
+  const { page } = ctx
+
+  // if the <a> element can be queried, the HTML is rendered correctly
+  const tweetHandle = await page.waitForSelector('#htmlError a')
+  const innerText = await tweetHandle.evaluate(node => node.innerText)
+  const expected = "twitter"
+  if (expected != innerText) {
+    await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
+    t.fail(`'${expected}' is not equal to '${innerText}'`)
+  }
+  t.pass()
+  await tearDown(ctx)
+})
+
 
 test('Moment is rendered successfully', async t => {
   const ctx = await setUp('/moment')

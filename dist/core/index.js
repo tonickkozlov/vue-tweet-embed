@@ -79,8 +79,11 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
 
       if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
         var $errorMsg = h('div', {
-          class: this.$props.errorMessageClass
-        }, this.$props.errorMessage);
+          class: this.$props.errorMessageClass,
+          domProps: {
+            innerHTML: this.$props.errorMessage
+          }
+        });
         return h('div', [$errorMsg]);
       }
 
