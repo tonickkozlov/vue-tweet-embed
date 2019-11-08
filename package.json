@@ -5,7 +5,7 @@
   "main": "dist",
   "scripts": {
     "test": "ava --serial --verbose --no-power-assert",
-    "pretest": "eslint src && npm run build",
+    "pretest": "eslint src && npm run build && npm run preexamples",
     "prebuild": "npm run clean",
     "build": "./node_modules/.bin/babel src --out-dir dist",
     "clean": "rimraf dist",
