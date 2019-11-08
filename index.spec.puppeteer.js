@@ -9,7 +9,6 @@ async function setUp(path, port = PORT) {
 
   app.use("/", express.static(__dirname + '/examples'));
 
-  console.debug('Listening at port', port)
   const server = app.listen(port);
   const browser = await puppeteer.launch({
     // headless: false,
@@ -42,6 +41,31 @@ test('Tweet is rendered successfully', async t => {
   if (!innerHTML.includes(expected)) {
     await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
     t.fail(`Did not find '${expected}' in '${innerHTML}'`)
+  }
+  t.pass()
+  await tearDown(ctx)
+});
+
+test('Moment is rendered successfully', async t => {
+  const ctx = await setUp('/moment')
+  const { page } = ctx
+
+  // moment is inside of an iframe so extract first
+  const iframeHandle = await page.waitForSelector('iframe#twitter-widget-0')
+  const document = await iframeHandle.evaluateHandle(node => node.contentDocument)
+  t.truthy(document)
+
+  // for simplicity, get all lines inside of <p> elements
+  // and check an arbitrary one
+  const $ps = await document.$$('p')
+  t.truthy($ps && $ps.length > 0)
+  const pContents = await Promise.all($ps.map(x => x.evaluate($el => $el.innerText)))
+  const momentContent = pContents.join('\n')
+
+  const expected = "You whipped out that Mexican thing again"
+  if (!momentContent.includes(expected)) {
+    await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
+    t.fail(`Did not find '${expected}' in '${momentContent}'`)
   }
   t.pass()
   await tearDown(ctx)
