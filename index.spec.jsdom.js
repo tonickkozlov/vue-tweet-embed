@@ -1,30 +1,36 @@
 import test from 'ava'
 import jsdom from 'jsdom'
 import decache from 'decache'
+import fs from 'fs'
 import { spy } from 'simple-spy'
+
+const { JSDOM } = jsdom
+
+const loadVueIntoWindow = (window) => {
+    const vueFilePath = require.resolve('vue/dist/vue')
+    window.eval(String(fs.readFileSync(vueFilePath)))
+    return window.Vue
+}
 
 const createEnv = (scripts = []) => {
     return new Promise((resolve, reject) => {
-        jsdom.env({
-            html: '<!doctype html><html><body></body></html>',
-            scripts: [require.resolve('vue/dist/vue'), ...scripts],
-            done: (err, window) => {
-                if (err) {
-                    reject(err)
-                }
-
-                const Vue = window.Vue
-                const document = window.document
-                // require a new instance of Tweet every time to avoid side-effects
-                const { Tweet, Moment, Timeline } = require('./dist')
-
-                // set global after initialization of Vue
-                global.window = window
-                global.document = document
-
-                resolve({ Vue, Tweet, Moment, Timeline, window, document })
-            }
+        const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+            runScripts: "outside-only",
+            // will not log browser events to console
+            virtualConsole: new jsdom.VirtualConsole()
         })
+        const window = dom.window
+        const document = window.document
+        const Vue = loadVueIntoWindow(window)
+
+        // require a new instance of Tweet every time to avoid side-effects
+        const { Tweet, Moment, Timeline } = require('./dist')
+
+        // window and document needs to be global
+        // (required by vue's Ctor.$mount)
+        global.window = window
+        global.document = document
+        resolve({ Vue, Tweet, Moment, Timeline, window, document })
     })
 }
 
