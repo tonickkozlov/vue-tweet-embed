@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/tonickkozlov/vue-tweet-embed.svg?style=svg)](https://circleci.com/gh/tonickkozlov/vue-tweet-embed)
+[![CircleCI](https://circleci.com/gh/tonickkozlov/vue-tweet-embed.svg?style=svg)](https://circleci.com/gh/tonickkozlov/vue-tweet-embed) [![Greenkeeper badge](https://badges.greenkeeper.io/tonickkozlov/vue-tweet-embed.svg)](https://greenkeeper.io/)
 
 # vue-tweet-embed
 
