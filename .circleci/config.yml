@@ -22,19 +22,17 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v3-dependencies-{{ checksum "package-lock.json" }}
+          - v4-dependencies-{{ checksum "package-lock.json" }}
 
       - run:
-          name: "install puppeteer"
+          name: "install puppeteer dependencies"
           command: |
-            sudo apt-get update
-            # Install latest chrome dev package, which installs the necessary libs to
-            # make the bundled version of Chromium that Puppeteer installs work.
-            sudo apt-get install -y wget --no-install-recommends
-            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-            sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-            sudo apt-get update
-            sudo apt-get install -y google-chrome-unstable --no-install-recommends
+            sudo apt-get update && \
+            sudo apt-get install -yq libasound2 libatk1.0-0 libcairo2 libcups2 \
+            libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
+            libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
+            libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
+            ca-certificates libnss3 lsb-release xdg-utils
 
       - run:
           name: "install node modules"
@@ -44,7 +42,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v3-dependencies-{{ checksum "package-lock.json" }}
+          key: v4-dependencies-{{ checksum "package-lock.json" }}
         
       # run tests!
       - run: npm test
