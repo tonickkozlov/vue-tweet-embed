@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/tonickkozlov/vue-tweet-embed.svg?style=svg)](https://circleci.com/gh/tonickkozlov/vue-tweet-embed)
+[![CircleCI](https://circleci.com/gh/tonickkozlov/vue-tweet-embed.svg?style=svg)](https://circleci.com/gh/tonickkozlov/vue-tweet-embed) [![Greenkeeper badge](https://badges.greenkeeper.io/tonickkozlov/vue-tweet-embed.svg)](https://greenkeeper.io/)
 
 # vue-tweet-embed
 
@@ -85,4 +85,8 @@ Tweets that could not be loaded can be replaced with custom text.
 A custom class can be specifier as well.
 ```javascript
 <Tweet id="14" error-message="This tweet could not be loaded" error-message-class="tweet--not-found"/>
+```
+Custom html message:
+```javascript
+<tweet error-message="Sorry the tweet is not available. Search on <a href='https://twitter.com'>twitter</a>"></tweet>
 ```

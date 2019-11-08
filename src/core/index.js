@@ -6,7 +6,7 @@ function addPlatformScript(src) {
         const s = document.createElement('script')
         s.setAttribute('src', src)
         document.body.appendChild(s)
-        addScriptPromise = new Promise((resolve, reject) => {
+        addScriptPromise = new Promise(resolve => {
             s.onload = () => {
                 resolve(window.twttr)
             }
@@ -62,7 +62,12 @@ const twitterEmbedComponent = (me) => {
             }
 
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
-                const $errorMsg = h('div', { class: this.$props.errorMessageClass }, this.$props.errorMessage)
+                const $errorMsg = h('div', {
+                    class: this.$props.errorMessageClass,
+                    domProps: {
+                        innerHTML: this.$props.errorMessage
+                    }
+                })
                 return h('div', [$errorMsg])
             }
 

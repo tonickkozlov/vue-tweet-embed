@@ -8,7 +8,7 @@ function addPlatformScript(src) {
     var s = document.createElement('script');
     s.setAttribute('src', src);
     document.body.appendChild(s);
-    addScriptPromise = new Promise(function (resolve, reject) {
+    addScriptPromise = new Promise(function (resolve) {
       s.onload = function () {
         resolve(window.twttr);
       };
@@ -79,8 +79,11 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
 
       if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
         var $errorMsg = h('div', {
-          class: this.$props.errorMessageClass
-        }, this.$props.errorMessage);
+          class: this.$props.errorMessageClass,
+          domProps: {
+            innerHTML: this.$props.errorMessage
+          }
+        });
         return h('div', [$errorMsg]);
       }
 
