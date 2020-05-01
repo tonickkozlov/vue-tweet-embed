@@ -52,7 +52,7 @@
     "eslint-plugin-vue": "^6.0.0",
     "express": "^4.17.1",
     "jsdom": "^15.2.1",
-    "puppeteer": "^2.0.0",
+    "puppeteer": "^3.0.0",
     "regenerator-runtime": "^0.13.2",
     "rimraf": "^3.0.0",
     "simple-spy": "^3.0.1",
