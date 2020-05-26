@@ -41,7 +41,7 @@
   ],
   "devDependencies": {
     "@babel/cli": "^7.10.0",
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.10.0",
     "@babel/preset-env": "^7.1.0",
     "ava": "^2.4.0",
     "decache": "^4.1.0",
