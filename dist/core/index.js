@@ -63,7 +63,7 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
         params = this.id;
       }
 
-      Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
+      Promise.resolve(window.twttr && window.twttr.widgets ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
         return me.embedComponent(twttr, params, _this.$el, _this.options);
       }).then(function (data) {
         _this.isAvailable = data !== undefined;
