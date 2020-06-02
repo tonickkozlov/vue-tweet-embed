@@ -23,6 +23,9 @@ const createEnv = (scripts = []) => {
         const document = window.document
         const Vue = loadVueIntoWindow(window)
 
+        // Add default twttr object without widgets
+        window.twttr = {}
+
         // require a new instance of Tweet every time to avoid side-effects
         const { Tweet, Moment, Timeline } = require('./dist')
 
