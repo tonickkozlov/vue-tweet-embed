@@ -49,7 +49,7 @@ const twitterEmbedComponent = (me) => {
                 params = this.id
             }
 
-            Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
+            Promise.resolve((window.twttr && window.twttr.widgets) ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
                 .then(twttr => me.embedComponent(twttr, params, this.$el, this.options))
                 .then(data => {
                     this.isAvailable = (data !== undefined)
