@@ -3,10 +3,15 @@
 var addScriptPromise = 0;
 /** Adds proviced script to the page, once **/
 
-function addPlatformScript(src) {
+function addPlatformScript(src, scriptTagHook) {
   if (!addScriptPromise) {
     var s = document.createElement('script');
     s.setAttribute('src', src);
+
+    if (scriptTagHook) {
+      scriptTagHook(s);
+    }
+
     document.body.appendChild(s);
     addScriptPromise = new Promise(function (resolve) {
       s.onload = function () {
@@ -28,6 +33,9 @@ var defaultProps = {
   },
   slug: {
     type: String
+  },
+  scriptTagHook: {
+    type: Function
   },
   options: Object
   /** Basic function used to mount Twitter component */
@@ -63,7 +71,7 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
         params = this.id;
       }
 
-      Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
+      Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js', this.scriptTagHook)).then(function (twttr) {
         return me.embedComponent(twttr, params, _this.$el, _this.options);
       }).then(function (data) {
         _this.isAvailable = data !== undefined;

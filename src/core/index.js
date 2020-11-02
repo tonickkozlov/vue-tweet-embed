@@ -1,10 +1,13 @@
 let addScriptPromise = 0
 
 /** Adds proviced script to the page, once **/
-function addPlatformScript(src) {
+function addPlatformScript(src, scriptTagHook) {
     if (!addScriptPromise) {
         const s = document.createElement('script')
         s.setAttribute('src', src)
+        if (scriptTagHook) {
+            scriptTagHook(s)
+        }
         document.body.appendChild(s)
         addScriptPromise = new Promise(resolve => {
             s.onload = () => {
@@ -25,6 +28,9 @@ const defaultProps = {
     },
     slug: {
         type: String
+    },
+    scriptTagHook: {
+        type: Function
     },
     options: Object
 }
@@ -49,7 +55,7 @@ const twitterEmbedComponent = (me) => {
                 params = this.id
             }
 
-            Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
+            Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js', this.scriptTagHook))
                 .then(twttr => me.embedComponent(twttr, params, this.$el, this.options))
                 .then(data => {
                     this.isAvailable = (data !== undefined)
