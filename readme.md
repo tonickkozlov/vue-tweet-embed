@@ -61,6 +61,25 @@ https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/guide
 Only `sourceType`: `profile`, `likes` and `list` are integrated. Embedded-Timeline Options Reference:
 https://dev.twitter.com/web/embedded-timelines/parameters
 
+## Intercepting the `<script>` tag to e.g. comply with cookie consent regulation
+
+Before adding the script tag to DOM, change its `src` to `data-src` and add `data-cookieconsent`.
+
+```javascript
+<Timeline ... :script-tag-hook="suspendLoading"/>
+
+// ...
+
+methods: {
+    // this callback is called just before scriptTag is added to DOM.
+    suspendLoading(scriptTag) {
+        scriptTag.dataset.src = scriptTag.src
+        scriptTag.removeAttribute('src')
+        scriptTag.dataset.cookieconsent = 'marketing'
+    }
+
+}
+```
 
 ## Showing a placeholder while the tweet is being loaded
 
