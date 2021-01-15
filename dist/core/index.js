@@ -72,12 +72,14 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
     },
     render: function render(h) {
       if (this.isLoaded && this.isAvailable) {
+        this.$emit('tweet-loaded-success');
         return h('div', {
           class: this.$props.widgetClass
         });
       }
 
       if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
+        this.$emit('tweet-loaded-failure');
         var $errorMsg = h('div', {
           class: this.$props.errorMessageClass,
           domProps: {
