@@ -1,8 +1,7 @@
-const Vue = require('vue/dist/vue.js')
+const Vue = require('vue/dist/vue.esm-browser.js')
 const Tweet = require('../../dist/tweet').default
 
-new Vue({
-  el: '#app',
+Vue.createApp({
   template: `<div>
     <div id="tweetLoaded">
       <p>Tweet that renders successfully:</p>
@@ -20,4 +19,4 @@ new Vue({
   components: {
     Tweet,
   }
-})
+}).mount('#app')

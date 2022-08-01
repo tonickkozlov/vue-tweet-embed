@@ -1,6 +1,8 @@
+import { h } from 'vue'
+
 let addScriptPromise = 0
 
-/** Adds proviced script to the page, once **/
+/** Adds provided script to the page, once **/
 function addPlatformScript(src) {
     if (!addScriptPromise) {
         const s = document.createElement('script')
@@ -50,28 +52,31 @@ const twitterEmbedComponent = (me) => {
             }
 
             Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js'))
-                .then(twttr => me.embedComponent(twttr, params, this.$el, this.options))
+                .then(twttr => {
+                    if (typeof params === 'string' && !Number(params)) return Promise.reject();
+
+                    return me.embedComponent(twttr, params, this.$el, this.options)
+                })
                 .then(data => {
                     this.isAvailable = (data !== undefined)
                     this.isLoaded = true
                 })
+                .catch(() => {
+                    this.isAvailable = false
+                    this.isLoaded = true
+                })
         },
-        render(h) {
+        render() {
             if (this.isLoaded && this.isAvailable) {
                 return h('div', { class: this.$props.widgetClass })
             }
 
             if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
-                const $errorMsg = h('div', {
-                    class: this.$props.errorMessageClass,
-                    domProps: {
-                        innerHTML: this.$props.errorMessage
-                    }
-                })
+                const $errorMsg = h('div', { class: this.$props.errorMessageClass, innerHTML: this.$props.errorMessage })
                 return h('div', [$errorMsg])
             }
 
-            return h('div', { class: this.$props.widgetClass }, this.$slots.default)
+            return h('div', { class: this.$props.widgetClass }, this.$slots.default && this.$slots.default())
         }
     }
 }

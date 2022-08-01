@@ -7,7 +7,7 @@ import { spy } from 'simple-spy'
 const { JSDOM } = jsdom
 
 const loadVueIntoWindow = (window) => {
-    const vueFilePath = require.resolve('vue/dist/vue')
+    const vueFilePath = require.resolve('vue/dist/vue.global.js')
     window.eval(String(fs.readFileSync(vueFilePath)))
     return window.Vue
 }
@@ -21,6 +21,7 @@ const createEnv = (scripts = []) => {
         })
         const window = dom.window
         const document = window.document
+        const navigator = window.navigator
         const Vue = loadVueIntoWindow(window)
 
         // require a new instance of Tweet every time to avoid side-effects
@@ -30,6 +31,7 @@ const createEnv = (scripts = []) => {
         // (required by vue's Ctor.$mount)
         global.window = window
         global.document = document
+        global.navigator = navigator
         resolve({ Vue, Tweet, Moment, Timeline, window, document })
     })
 }
@@ -78,8 +80,7 @@ test('Timeline Should be available on module level as well as per-component leve
 
 test('Should inject twitter embed script if none is given', t => {
     const { Tweet, Vue, document } = t.context
-    const Ctor = Vue.extend(Tweet)
-    new Ctor().$mount()
+    Vue.createApp(Tweet).mount('body')
 
     const $script = document.querySelector('script[src="//platform.twitter.com/widgets.js"]')
     t.true($script !== null)
@@ -92,8 +93,8 @@ test('Should not inject more than one script par page', t => {
         components: { Tweet },
         template: '<div><Tweet v-for="i in [1, 2, 3]"/></div>'
     }
-    const Ctor = Vue.extend(TweetPage)
-    new Ctor().$mount()
+
+    Vue.createApp(TweetPage).mount('body')
 
     const $scripts = document.querySelectorAll('script[src="//platform.twitter.com/widgets.js"]')
     t.is($scripts.length, 1)
@@ -115,11 +116,11 @@ test.cb('Should show a newly created Tweet element as tweet\'s immeditate child'
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Tweet id="123" :options="{foo:\'bar\'}"></Tweet>',
         components: { Tweet }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         // check that library was called with correct options
@@ -149,11 +150,11 @@ test.cb('Should show an error message when tweet cannot be fetched', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Tweet id="14"></Tweet>',
         components: { Tweet }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -175,11 +176,11 @@ test.cb('Should show a custom error message when tweet cannot be fetched and par
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Tweet error-message="why you no work" error-message-class="tweet-error" id="14"></Tweet>',
         components: { Tweet }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -201,11 +202,11 @@ test.cb('Should show children while tweet is not loaded', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Tweet id="123"><div id="foo">hi</div></Tweet>',
         components: { Tweet }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     t.truthy(vm.$el.querySelector('#foo'))
     setTimeout(() => {
@@ -230,11 +231,11 @@ test.cb('Should show a newly created Moment element as tweet\'s immeditate child
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Moment id="123" :options="{foo:\'bar\'}"></Moment>',
         components: { Moment }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         // check that library was called with correct options
@@ -264,11 +265,11 @@ test.cb('Should show an error message when moment cannot be fetched', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Moment id="14"></Moment>',
         components: { Moment }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -290,11 +291,11 @@ test.cb('Should show a custom error message when moment cannot be fetched and pa
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Moment error-message="why you no work" error-message-class="moment-error" id="14"></Moment>',
         components: { Moment }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -316,11 +317,11 @@ test.cb('Should show children while moment is not loaded', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Moment id="123"><div id="foo">hi</div></Moment>',
         components: { Moment }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     t.truthy(vm.$el.querySelector('#foo'))
     setTimeout(() => {
@@ -347,11 +348,11 @@ test.cb('Should show a newly created Timeline element as tweet\'s immeditate chi
 
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Timeline id="123" sourceType="profile" :options="{foo:\'bar\'}"></Timeline>',
         components: { Timeline }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         // check that library was called with correct options
@@ -388,11 +389,11 @@ test.cb('Should show a newly created Timeline element as list\'s immeditate chil
 
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Timeline sourceType="list" id="TwitterDev" slug="national-parks" :options="{foo:\'bar\'}"></Timeline>',
         components: { Timeline }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         // check that library was called with correct options
@@ -425,11 +426,11 @@ test.cb('Should show an error message when timeline cannot be fetched', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Timeline id="14" sourceType="profile"></Timeline>',
         components: { Timeline }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -451,11 +452,11 @@ test.cb('Should show a custom error message when timeline cannot be fetched and 
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Timeline error-message="why you no work" error-message-class="timeline-error" id="14"></Timeline>',
         components: { Timeline }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     setTimeout(() => {
         const $tweetContents = vm.$el.firstChild
@@ -477,11 +478,11 @@ test.cb('Should show children timeline tweet is not loaded', t => {
     }
     window.twttr = mockTwttr
 
-    const Ctor = Vue.extend({
+    const Ctor = {
         template: '<Timeline id="123" sourceType="profile"><div id="foo">hi</div></Timeline>',
         components: { Timeline }
-    })
-    const vm = new Ctor().$mount()
+    }
+    const vm = Vue.createApp(Ctor).mount('body')
 
     t.truthy(vm.$el.querySelector('#foo'))
     setTimeout(() => {
