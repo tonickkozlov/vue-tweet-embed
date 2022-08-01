@@ -1,10 +1,9 @@
-const Vue = require('vue/dist/vue.js')
+const Vue = require('vue/dist/vue.esm-browser.js')
 const Moment = require('../../dist/moment').default
 
-new Vue({
-  el: '#app',
+Vue.createApp({
   template: `<Moment :id="'784457497809682433'"></Moment>`,
   components: {
     Moment,
   }
-})
+}).mount('#app')
