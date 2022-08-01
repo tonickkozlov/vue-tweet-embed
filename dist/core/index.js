@@ -1,7 +1,9 @@
 "use strict";
 
+var _vue = require("vue");
+
 var addScriptPromise = 0;
-/** Adds proviced script to the page, once **/
+/** Adds provided script to the page, once **/
 
 function addPlatformScript(src) {
   if (!addScriptPromise) {
@@ -30,9 +32,8 @@ var defaultProps = {
     type: String
   },
   options: Object
-  /** Basic function used to mount Twitter component */
-
 };
+/** Basic function used to mount Twitter component */
 
 var twitterEmbedComponent = function twitterEmbedComponent(me) {
   return {
@@ -64,32 +65,34 @@ var twitterEmbedComponent = function twitterEmbedComponent(me) {
       }
 
       Promise.resolve(window.twttr ? window.twttr : addPlatformScript('//platform.twitter.com/widgets.js')).then(function (twttr) {
+        if (typeof params === 'string' && !Number(params)) return Promise.reject();
         return me.embedComponent(twttr, params, _this.$el, _this.options);
       }).then(function (data) {
         _this.isAvailable = data !== undefined;
         _this.isLoaded = true;
+      }).catch(function () {
+        _this.isAvailable = false;
+        _this.isLoaded = true;
       });
     },
-    render: function render(h) {
+    render: function render() {
       if (this.isLoaded && this.isAvailable) {
-        return h('div', {
+        return (0, _vue.h)('div', {
           class: this.$props.widgetClass
         });
       }
 
       if (this.isLoaded && !this.isAvailable && this.$props.errorMessage) {
-        var $errorMsg = h('div', {
+        var $errorMsg = (0, _vue.h)('div', {
           class: this.$props.errorMessageClass,
-          domProps: {
-            innerHTML: this.$props.errorMessage
-          }
+          innerHTML: this.$props.errorMessage
         });
-        return h('div', [$errorMsg]);
+        return (0, _vue.h)('div', [$errorMsg]);
       }
 
-      return h('div', {
+      return (0, _vue.h)('div', {
         class: this.$props.widgetClass
-      }, this.$slots.default);
+      }, this.$slots.default && this.$slots.default());
     }
   };
 };

@@ -16,10 +16,14 @@ async function setUp(path, port = PORT) {
   const server = app.listen(port);
   const browser = await puppeteer.launch({
     // headless: false,
+    args: [
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process'
+    ],
   });
   const page = await browser.newPage();
   page.setDefaultTimeout(10000)
-  await page.goto(`http://localhost:${port}${path}`, { waitUntil: 'networkidle0' });
+  await page.goto(`http://localhost:${port}${path}`, { waitUntil: 'networkidle2' });
 
   return { server, browser, page }
 }
@@ -39,8 +43,14 @@ test('Tweet is rendered successfully', async t => {
   const ctx = await setUp('/tweet')
   const { page } = ctx
 
-  const tweetHandle = await page.waitForSelector('#tweetLoaded .twitter-tweet-rendered')
-  const innerHTML = await tweetHandle.evaluate(node => node.shadowRoot.innerHTML)
+  const tweetHandle = await page.waitForSelector('#tweetLoaded .twitter-tweet-rendered iframe')
+  const frame = await tweetHandle.contentFrame();
+  const context = await frame.executionContext();
+  const innerHTML = await context.evaluate(() => {
+    const el = document.querySelector("*");
+    if (el) return el.outerHTML;
+  });
+
   const expected = "What if you didn't need to manually install Node"
   if (!innerHTML.includes(expected)) {
     await saveScreenshotWithTimestamp(page, '/tmp/vue-tweet-embed-puppeteer-fail-')
