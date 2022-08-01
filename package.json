@@ -31,7 +31,7 @@
   "author": "Anton Kozlov <tonickkozlov@me.com>",
   "license": "MIT",
   "peerDependencies": {
-    "vue": "^2.2.0"
+    "vue": "3.x"
   },
   "browserslist": [
     "> 1%",
@@ -52,11 +52,11 @@
     "eslint-plugin-vue": "^6.0.0",
     "express": "^4.17.1",
     "jsdom": "^15.2.1",
-    "puppeteer": "^3.0.0",
+    "puppeteer": "^15.5.0",
     "regenerator-runtime": "^0.13.2",
     "rimraf": "^3.0.0",
     "simple-spy": "^3.0.1",
-    "vue": "^2.2.0",
+    "vue": "^3.2.37",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.4"
   },
@@ -78,6 +78,5 @@
         ]
       }
     }
-  },
-  "dependencies": {}
+  }
 }
